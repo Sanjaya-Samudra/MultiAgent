@@ -24,14 +24,14 @@ import os
 import json
 import re
 from dotenv import load_dotenv
-# from snowflake.snowpark import Session
+from snowflake.snowpark import Session
 from langchain_core.tools import tool
 from langchain_experimental.utilities import PythonREPL
 from typing import Annotated, Literal, Optional, List, Dict, Any, Type
-# from trulens.otel.semconv.trace import SpanAttributes
-# from trulens.core.otel.instrument import instrument
-# from snowflake.core import Root
-# from snowflake.core.cortex.lite_agent_service import AgentRunRequest
+from trulens.otel.semconv.trace import SpanAttributes
+from trulens.core.otel.instrument import instrument
+from snowflake.core import Root
+from snowflake.core.cortex.lite_agent_service import AgentRunRequest
 from pydantic import BaseModel, PrivateAttr
 from langchain_groq import ChatGroq
 from langchain_tavily import TavilySearch
@@ -39,15 +39,17 @@ from langchain_core.messages import HumanMessage
 from langgraph.graph import MessagesState, START, StateGraph, END
 from langgraph.types import Command
 from langgraph.prebuilt import create_react_agent
-# from trulens.core import Feedback
-# from trulens.core.feedback.selector import Selector
-# from trulens.providers.openai import OpenAI
+from trulens.core import Feedback
+from trulens.core.feedback.selector import Selector
+from trulens.providers.openai import OpenAI
+# Alias for TruLens provider to match the user request
+TruLensChatGroq = OpenAI
 import numpy as np
 from prompts import plan_prompt, executor_prompt, agent_system_prompt
 
 
 
-# os.environ["TRULENS_OTEL_TRACING"] = "1"
+os.environ["TRULENS_OTEL_TRACING"] = "1"
 
 # load full dotenv
 load_dotenv()
@@ -68,19 +70,19 @@ class State(MessagesState):
 MAX_REPLANS = 2
 
 # Create a Snowflake session
-# snowflake_connection_parameters = {
-#     "account": os.getenv("SNOWFLAKE_ACCOUNT"),
-#     "user": os.getenv("SNOWFLAKE_USER"),
-#     "password": os.getenv("SNOWFLAKE_PAT"),
-#     "database": os.getenv("SNOWFLAKE_DATABASE"),
-#     "schema": os.getenv("SNOWFLAKE_SCHEMA"),
-#     "role": os.getenv("SNOWFLAKE_ROLE"),
-#     "warehouse": os.getenv("SNOWFLAKE_WAREHOUSE"),
-# }
+snowflake_connection_parameters = {
+    "account": os.getenv("SNOWFLAKE_ACCOUNT"),
+    "user": os.getenv("SNOWFLAKE_USER"),
+    "password": os.getenv("SNOWFLAKE_PAT"),
+    "database": os.getenv("SNOWFLAKE_DATABASE"),
+    "schema": os.getenv("SNOWFLAKE_SCHEMA"),
+    "role": os.getenv("SNOWFLAKE_ROLE"),
+    "warehouse": os.getenv("SNOWFLAKE_WAREHOUSE"),
+}
 
-# snowpark_session = Session.builder.configs(
-#     snowflake_connection_parameters
-# ).create()
+snowpark_session = Session.builder.configs(
+    snowflake_connection_parameters
+).create()
 
 # create a python repl tool for importing in the lessons
 repl = PythonREPL()
