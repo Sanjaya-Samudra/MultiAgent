@@ -37,4 +37,8 @@ As this research evolves, different iterative versions of the Data Agent are cre
 - **No Arbitrary Limits**: Removes the "top 15" restrictions. The agent pushes dynamic boundaries (capturing up to 1,000 comments) and uses a character constraint (~60,000 chars) specifically tailored for Llama 3.1 context limits.
 - **Strict Synthesizer Guidelines**: Enforces strict instructions during synthesis to format answers into isolated sections (`Post Content Summary`, `Community Reaction`, `Key Insights`) and aggressively prevents the mention of specific commenter names to maintain privacy and readable abstractions.
 
+### `DataAgent_v3.ipynb` (Autonomous Evaluation & Recovery)
+- **Inline Context Evaluations (Idea 1):** Introduces an LLM judge step inside the web research node. It evaluates the "Context Relevance" of the pulled web data using a 0.0 to 1.0 scoring mechanism immediately after scraping to identify empty, deleted, or blocked web pages.
+- **Autonomous Replanning (Idea 3):** Hooks the context evaluation scores into a `replan_flag`. If the data extraction yields a critically low score (`< 0.4`), the `executor_node` is programmed to dynamically return control to the Planner to restart and try an alternate research trajectory, granting self-healing properties to the multi-agent graph.
+
 *(Future versions mapped to further iterations of the research will be documented here.)*
